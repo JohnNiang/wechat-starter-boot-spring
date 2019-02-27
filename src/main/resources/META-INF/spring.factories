@@ -1,0 +1,3 @@
+# Wechat
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+me.johnniang.wechat.wechatstarterbootspring.config.WechatAutoConfiguration
