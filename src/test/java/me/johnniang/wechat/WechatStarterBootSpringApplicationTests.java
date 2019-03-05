@@ -1,4 +1,4 @@
-package me.johnniang.wechat.wechatstarterbootspring;
+package me.johnniang.wechat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,8 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class WechatStarterBootSpringApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+    @Test
+    public void contextLoads() {
+    }
 
 }

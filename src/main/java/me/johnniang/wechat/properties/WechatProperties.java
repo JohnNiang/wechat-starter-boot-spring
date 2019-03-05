@@ -1,4 +1,4 @@
-package me.johnniang.wechat.wechatstarterbootspring.properties;
+package me.johnniang.wechat.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

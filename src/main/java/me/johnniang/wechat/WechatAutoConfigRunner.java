@@ -1,6 +1,6 @@
-package me.johnniang.wechat.wechatstarterbootspring;
+package me.johnniang.wechat;
 
-import me.johnniang.wechat.wechatstarterbootspring.properties.WechatProperties;
+import me.johnniang.wechat.properties.WechatProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

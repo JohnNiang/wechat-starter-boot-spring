@@ -1,4 +1,4 @@
-package me.johnniang.wechat.wechatstarterbootspring.service;
+package me.johnniang.wechat.service;
 
 /**
  * Wechat service interface.

@@ -1,8 +1,8 @@
-package me.johnniang.wechat.wechatstarterbootspring.config;
+package me.johnniang.wechat.config;
 
-import me.johnniang.wechat.wechatstarterbootspring.properties.WechatProperties;
-import me.johnniang.wechat.wechatstarterbootspring.service.WechatService;
-import me.johnniang.wechat.wechatstarterbootspring.service.impl.DefaultWechatServiceImpl;
+import me.johnniang.wechat.service.impl.DefaultWechatServiceImpl;
+import me.johnniang.wechat.properties.WechatProperties;
+import me.johnniang.wechat.service.WechatService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

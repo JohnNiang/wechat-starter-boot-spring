@@ -1,6 +1,6 @@
-package me.johnniang.wechat.wechatstarterbootspring.service.impl;
+package me.johnniang.wechat.service.impl;
 
-import me.johnniang.wechat.wechatstarterbootspring.service.WechatService;
+import me.johnniang.wechat.service.WechatService;
 
 /**
  * Default wechat service implementation.
