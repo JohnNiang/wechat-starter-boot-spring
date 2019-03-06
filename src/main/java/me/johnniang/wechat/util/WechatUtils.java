@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import me.johnniang.wechat.support.WechatConstant;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.SortedMap;
 
 /**
  * Utilities of wechat.
@@ -88,5 +91,41 @@ public class WechatUtils {
         }
 
         return matched;
+    }
+
+    /**
+     * Gets sha1 signature.
+     *
+     * @param sortedMap to be signed sorted map must not be null
+     * @param ignoreKeys  ignore keys
+     * @return sha1 signature
+     */
+    public static String getSha1Sign(SortedMap<String, Object> sortedMap, String... ignoreKeys) {
+        Assert.notNull(sortedMap, "To be signed map must not be null");
+        // Convert ignore keys to list
+        List<String> ignoreKeyList = Arrays.asList(ignoreKeys);
+
+        StringBuffer stringBuffer = new StringBuffer();
+
+        sortedMap.forEach((key, value) -> {
+            if (!ignoreKeyList.contains(key)) {
+                // If this key is not contain in ignore keys
+                stringBuffer.append(key).append("=").append(value).append('&');
+            }
+        });
+
+        String toBeSignedString = stringBuffer.toString();
+
+        // Remove the last '&' sign
+        toBeSignedString = StringUtils.removeEnd(toBeSignedString, "&");
+
+        log.debug("Before signing string: [{}]", toBeSignedString);
+
+        // Sha1 the string
+        String signature = DigestUtils.sha1Hex(toBeSignedString);
+
+        log.debug("Signature of sha1: [{}]", signature);
+
+        return signature;
     }
 }
