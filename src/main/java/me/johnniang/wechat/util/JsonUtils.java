@@ -188,6 +188,18 @@ public class JsonUtils {
     /**
      * Converts a source object to a map
      *
+     * @param source source object must not be null
+     * @return a map
+     * @throws IOException throws when fail to convert
+     */
+    @NonNull
+    public static Map<?, ?> objectToMap(@NonNull Object source) throws IOException {
+        return objectToMap(source, DEFAULT_JSON_MAPPER);
+    }
+
+    /**
+     * Converts a source object to a map
+     *
      * @param source       source object must not be null
      * @param objectMapper object mapper must not be null
      * @return a map

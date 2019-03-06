@@ -13,6 +13,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+/**
+ * Xml utilities.
+ *
+ * @author johnniang
+ */
 public class XmlUtils {
 
     /**
