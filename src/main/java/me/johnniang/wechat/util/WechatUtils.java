@@ -3,8 +3,13 @@ package me.johnniang.wechat.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import me.johnniang.wechat.support.WechatConstant;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+
+import java.io.IOException;
 
 /**
  * Utilities of wechat.

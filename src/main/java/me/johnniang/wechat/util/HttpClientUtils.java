@@ -12,6 +12,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.UnsupportedSchemeException;
@@ -168,7 +169,7 @@ public class HttpClientUtils {
     public static HttpResponse requestViaHttp(@NonNull String requestUrl,
                                               @NonNull String method,
                                               @Nullable HttpEntity entity,
-                                              NameValuePair... params) throws IOException {
+                                              @Nullable NameValuePair... params) throws IOException {
         return requestForResponse(requestUrl, method, entity, getHttpClient(), params);
     }
 
@@ -186,7 +187,7 @@ public class HttpClientUtils {
     public static HttpResponse requestViaHttps(@NonNull String requestUrl,
                                                @NonNull String method,
                                                @Nullable HttpEntity entity,
-                                               NameValuePair... params) throws IOException {
+                                               @Nullable NameValuePair... params) throws IOException {
         return requestForResponse(requestUrl, method, entity, getHttpsClient(), params);
     }
 
@@ -204,7 +205,7 @@ public class HttpClientUtils {
     public static HttpResponse requestAutoForResponse(@NonNull String requestUrl,
                                                       @NonNull String method,
                                                       @Nullable HttpEntity entity,
-                                                      NameValuePair... params) throws IOException {
+                                                      @Nullable NameValuePair... params) throws IOException {
         HttpClient client;
         String scheme = URI.create(requestUrl).getScheme();
         if (HTTPS.equals(scheme)) {
@@ -234,7 +235,7 @@ public class HttpClientUtils {
                                                   @NonNull String method,
                                                   @Nullable HttpEntity entity,
                                                   @NonNull HttpClient httpClient,
-                                                  NameValuePair... params) throws IOException {
+                                                  @Nullable NameValuePair... params) throws IOException {
         Assert.hasText(requestUrl, "Request url must not be blank");
         Assert.hasText(method, "Http method name must not be blank");
         Assert.notNull(httpClient, "Http client must not be null");
@@ -255,12 +256,13 @@ public class HttpClientUtils {
     /**
      * Reqeusts a resource.
      *
-     * @param requestUrl   request url must not be null
+     * @param requestUrl   v
      * @param method       http method name must not be null
      * @param data         request data
      * @param responseType response type must not be null
      * @param charset      charset (Default is ISO_8859_1)
      * @param objectMapper object mapper must not be null
+     * @param params       name value pair parameters
      * @param <D>          request data type
      * @param <T>          response data type
      * @return response data or null if no response data but response success
@@ -273,8 +275,11 @@ public class HttpClientUtils {
                                    @Nullable D data,
                                    @NonNull Class<T> responseType,
                                    @Nullable Charset charset,
-                                   @NonNull ObjectMapper objectMapper) {
+                                   @NonNull ObjectMapper objectMapper,
+                                   @Nullable NameValuePair... params) {
         Assert.notNull(objectMapper, "Object mapper must not be null");
+
+        HttpResponse response = null;
 
         try {
             StringEntity stringEntity = null;
@@ -288,39 +293,25 @@ public class HttpClientUtils {
             }
 
             // Request it and get response
-            HttpResponse response = HttpClientUtils.requestAutoForResponse(requestUrl, method, stringEntity);
+            response = HttpClientUtils.requestAutoForResponse(requestUrl, method, stringEntity, params);
 
             // Handle response failure
-            if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() >= 300) {
-                throw new ResponseFailureException("Failed to response " + requestUrl).setResponse(response);
-            }
+            shouldResponseSuccessfully(response);
 
             log.debug("Response status: [{}]", response);
 
-            if (byte[].class.isAssignableFrom(responseType)) {
-                return (T) IOUtils.toByteArray(response.getEntity().getContent());
-            }
+            // Convert response
+            return convertResponse(response.getEntity(), responseType, charset, objectMapper);
 
-            // Convert content to string
-            String responseContent = EntityUtils.toString(response.getEntity(), charset);
-
-            if (String.class.isAssignableFrom(responseType)) {
-                return (T) responseContent;
-            }
-
-            if (StringUtils.isNotBlank(responseContent)) {
-                // Convert response content to object
-                return objectMapper.readValue(responseContent, responseType);
-            }
-
-            return null;
         } catch (JsonProcessingException e) {
             throw new RequestFailureException("Failed to parse object to xml or json or failed to parse xml or json to object", e)
                     .setRequestUrl(requestUrl).setMethod(method);
         } catch (UnsupportedEncodingException e) {
             throw new RequestFailureException("Unsupported encoding", e).setRequestUrl(requestUrl).setMethod(method);
         } catch (IOException e) {
-            throw new RequestFailureException("Failed to request " + requestUrl).setRequestUrl(requestUrl).setMethod(method);
+            throw new RequestFailureException("Failed to request " + requestUrl, e).setRequestUrl(requestUrl).setMethod(method);
+        } finally {
+            closeQuietly(response);
         }
     }
 
@@ -342,6 +333,46 @@ public class HttpClientUtils {
         paramMap.forEach((key, value) -> nvpParams.add(new BasicNameValuePair(key.toString(), value.toString())));
 
         return nvpParams;
+    }
+
+    /**
+     * Posts form data.
+     *
+     * @param requestUrl      request url must not be null
+     * @param multipartEntity multipart http entity must not be null
+     * @param responseType    response type must not be null
+     * @param responseCharset response charset (Default is ISO_8859_1)
+     * @param objectMapper    object mapper must not be null
+     * @param <T>             response data type
+     * @return response data
+     */
+    @Nullable
+    public static <T> T postFormData(@NonNull String requestUrl,
+                                     @NonNull HttpEntity multipartEntity,
+                                     @NonNull Class<T> responseType,
+                                     @Nullable Charset responseCharset,
+                                     @NonNull ObjectMapper objectMapper) {
+        Assert.notNull(multipartEntity, "Multipart http entity must not be null");
+
+        String method = "post";
+
+        HttpResponse response = null;
+
+        try {
+            response = HttpClientUtils.requestAutoForResponse(requestUrl, method, multipartEntity);
+
+            // Handle response failure
+            shouldResponseSuccessfully(response);
+
+            log.debug("Response status: [{}]", response);
+
+            // Convert response
+            return convertResponse(response.getEntity(), responseType, responseCharset, objectMapper);
+        } catch (IOException e) {
+            throw new RequestFailureException("Faile to request " + requestUrl, e).setRequestUrl(requestUrl).setMethod(method);
+        } finally {
+            closeQuietly(response);
+        }
     }
 
     /**
@@ -374,5 +405,76 @@ public class HttpClientUtils {
                 clazz.equals(String.class);
 
         return !ignorable;
+    }
+
+    /**
+     * Should response successfully.
+     *
+     * @param response http response must not be null
+     * @throws ResponseFailureException throws when response status is less than 200 or more than 300
+     */
+    private static void shouldResponseSuccessfully(@NonNull HttpResponse response) {
+        Assert.notNull(response, "Http response must not be null");
+
+        // Handle response failure
+        if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() >= 300) {
+            throw new ResponseFailureException("Failed to response").setResponse(response);
+        }
+    }
+
+    /**
+     * Converts response.
+     *
+     * @param httpEntity      http entity must not be null
+     * @param responseType    response type must not be null
+     * @param responseCharset response charset
+     * @param objectMapper    object mapper must not be null
+     * @param <T>             response data type
+     * @return response data
+     * @throws IOException throws when failed to response
+     */
+    @Nullable
+    private static <T> T convertResponse(@NonNull HttpEntity httpEntity,
+                                         @NonNull Class<T> responseType,
+                                         @Nullable Charset responseCharset,
+                                         @NonNull ObjectMapper objectMapper) throws IOException {
+        Assert.notNull(httpEntity, "Http entity must not be null");
+        Assert.notNull(responseType, "Response type must not be null");
+        Assert.notNull(objectMapper, "Object mapper must not be null");
+
+        if (byte[].class.isAssignableFrom(responseType)) {
+            return (T) IOUtils.toByteArray(httpEntity.getContent());
+        }
+
+        // Convert content to string
+        String responseContent = EntityUtils.toString(httpEntity, responseCharset);
+
+        if (String.class.isAssignableFrom(responseType)) {
+            return (T) responseContent;
+        }
+
+        if (StringUtils.isNotBlank(responseContent)) {
+            // Convert response content to object
+            return objectMapper.readValue(responseContent, responseType);
+        }
+
+        // Return null
+        return null;
+    }
+
+    /**
+     * Closes response quietly.
+     *
+     * @param response http response
+     */
+    public static void closeQuietly(@Nullable HttpResponse response) {
+        // Close it
+        if (response instanceof CloseableHttpResponse) {
+            try {
+                ((CloseableHttpResponse) response).close();
+            } catch (IOException e) {
+                // Ignore this error
+            }
+        }
     }
 }
