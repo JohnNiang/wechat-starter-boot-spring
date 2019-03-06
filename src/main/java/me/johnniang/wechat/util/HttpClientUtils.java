@@ -138,6 +138,7 @@ public class HttpClientUtils {
      *
      * @return https client
      */
+    @NonNull
     public static HttpClient getHttpsClient() {
         return HttpClientContainer.HTTPS_CLIENT;
     }
@@ -153,6 +154,7 @@ public class HttpClientUtils {
      * @return response string result
      * @throws IOException in case of a problem or the connection was aborted
      */
+    @Nullable
     public static String requestViaHttp(@NonNull String requestUrl,
                                         @NonNull String method,
                                         @Nullable HttpEntity entity,
@@ -172,6 +174,7 @@ public class HttpClientUtils {
      * @return response string result
      * @throws IOException in case of a problem or the connection was aborted
      */
+    @Nullable
     public static String requestViaHttps(@NonNull String requestUrl,
                                          @NonNull String method,
                                          @Nullable HttpEntity entity,
@@ -192,6 +195,7 @@ public class HttpClientUtils {
      * @return response string result
      * @throws IOException in case of a problem or the connection was aborted
      */
+    @Nullable
     private static String request(@NonNull String requestUrl,
                                   @NonNull String method,
                                   @Nullable HttpEntity entity,

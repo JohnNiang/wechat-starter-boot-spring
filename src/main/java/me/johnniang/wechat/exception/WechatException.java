@@ -7,5 +7,4 @@ package me.johnniang.wechat.exception;
  */
 public class WechatException extends RuntimeException {
 
-
 }
