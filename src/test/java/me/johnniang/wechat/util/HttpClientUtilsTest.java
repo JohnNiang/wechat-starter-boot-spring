@@ -15,11 +15,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.util.EntityUtils;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,23 @@ import static org.junit.Assert.assertThat;
  * @author johnniang
  */
 @Slf4j
+@ActiveProfiles("test")
 public class HttpClientUtilsTest {
+
+    @Test
+    public void getUrlSchemeTest() {
+        String url = "http://www.bing.com";
+
+        URI uri = URI.create(url);
+
+        log.debug("ToString: [{}]", uri.toString());
+        log.debug("ToASCIIString: [{}]", uri.toASCIIString());
+        log.debug("GetScheme: [{}]", uri.getScheme());
+        log.debug("GetSchemeSpecificPart: [{}]", uri.getSchemeSpecificPart());
+        log.debug("GetRawSchemeSpecificPart: [{}]", uri.getRawSchemeSpecificPart());
+
+        assertThat(uri.getScheme(), equalTo("http"));
+    }
 
     @Test
     public void convertToNvpParamsTest() throws IOException {
@@ -51,8 +69,8 @@ public class HttpClientUtilsTest {
 
     @Test
     public void getViaHttpTest() throws IOException {
-        String response = HttpClientUtils.requestViaHttp("http://bing.com", "get", null, StandardCharsets.UTF_8);
-        System.out.println("Response: " + response);
+        HttpResponse response = HttpClientUtils.requestViaHttp("http://bing.com", "get", null);
+        log.debug("Response: [{}}", EntityUtils.toString(response.getEntity()));
     }
 
     @Test
@@ -69,8 +87,8 @@ public class HttpClientUtilsTest {
         HttpGet request = new HttpGet("http://www.bing.com");
         HttpResponse response = client.execute(request);
         try {
-            System.out.println("======================");
-            System.out.println(response.getStatusLine());
+            log.debug("======================");
+            log.debug(response.getStatusLine().toString());
             request.abort();
         } finally {
             if (response != null) {
