@@ -20,31 +20,37 @@ import java.util.Map;
  */
 public class JsonUtils {
 
-    private final static ObjectMapper DEFAULT_JSON_MAPPER = createObjectMapper();
+    /**
+     * Default json mapper.
+     */
+    public final static ObjectMapper DEFAULT_JSON_MAPPER = createDefaultJsonMapper();
 
     private JsonUtils() {
     }
 
 
     /**
-     * Creates an object mapper.
+     * Creates a default json mapper.
      *
      * @return object mapper
      */
-    public static ObjectMapper createObjectMapper() {
-        return createObjectMapper(null);
+    public static ObjectMapper createDefaultJsonMapper() {
+        return createDefaultJsonMapper(null);
     }
 
     /**
-     * Creates an object mapper.
+     * Creates a default json mapper.
      *
      * @param strategy property naming strategy
      * @return object mapper
      */
     @NonNull
-    public static ObjectMapper createObjectMapper(@Nullable PropertyNamingStrategy strategy) {
+    public static ObjectMapper createDefaultJsonMapper(@Nullable PropertyNamingStrategy strategy) {
+        // Create object mapper
         ObjectMapper mapper = new ObjectMapper();
+        // Configure
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // Set property naming strategy
         if (strategy != null) {
             mapper.setPropertyNamingStrategy(strategy);
         }
