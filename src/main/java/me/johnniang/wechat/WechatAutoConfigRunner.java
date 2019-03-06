@@ -1,10 +1,9 @@
 package me.johnniang.wechat;
 
+import lombok.extern.slf4j.Slf4j;
 import me.johnniang.wechat.properties.WechatProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.logging.Logger;
 
 /**
  * Runner of wechat auto configuration.
@@ -12,9 +11,8 @@ import java.util.logging.Logger;
  * @author johnniang
  */
 @Component
+@Slf4j
 public class WechatAutoConfigRunner implements CommandLineRunner {
-
-    private final Logger log = Logger.getLogger(getClass().getName());
 
     private final WechatProperties wechat;
 
@@ -23,7 +21,7 @@ public class WechatAutoConfigRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        log.info("Wechat has been configured automatically.\n" + wechat);
+    public void run(String... args) {
+        log.trace("Wechat has been configured automatically which content is: [{}]", wechat);
     }
 }
