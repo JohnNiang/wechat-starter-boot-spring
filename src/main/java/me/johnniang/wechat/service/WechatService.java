@@ -1,6 +1,6 @@
 package me.johnniang.wechat.service;
 
-import me.johnniang.wechat.support.WechatToken;
+import me.johnniang.wechat.support.token.WechatToken;
 import org.springframework.lang.NonNull;
 
 /**

@@ -3,7 +3,7 @@ package me.johnniang.wechat.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import me.johnniang.wechat.properties.WechatProperties;
 import me.johnniang.wechat.service.WechatService;
-import me.johnniang.wechat.support.WechatToken;
+import me.johnniang.wechat.support.token.WechatToken;
 import org.springframework.util.Assert;
 
 import static me.johnniang.wechat.util.WechatUtils.request;

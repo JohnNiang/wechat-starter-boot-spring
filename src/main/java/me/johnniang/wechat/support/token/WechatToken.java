@@ -1,9 +1,10 @@
-package me.johnniang.wechat.support;
+package me.johnniang.wechat.support.token;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import me.johnniang.wechat.support.WechatBaseResponse;
 
 /**
  * Wechat token.

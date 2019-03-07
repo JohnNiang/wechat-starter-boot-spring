@@ -10,6 +10,8 @@
 
 > 当前仅发布在 Snapshot 仓库中，待功能完善后将会 release 到 maven center。
 
+> 且由于 release 速度太慢，暂且配置 nexus repo。
+
 ### Gradle
 
 ```groovy
@@ -20,12 +22,27 @@ repositories {
     }
 }
 
-implementation 'me.johnniang.wechat:wechat-starter-boot-spring:{version}-SNAPSHOT'
+implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.3'
 ```
 
 ### Maven
 
-unkown...
+```xml
+<repositories>
+    <repository>
+        <id>nexus_repo</id>
+        <name>Nexus oss repo</name>
+        <url>https://oss.sonatype.org/content/groups/public/</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>me.johnniang.wechat</groupId>
+    <artifactId>wechat-starter-boot-spring</artifactId>
+    <version>0.0.3</version>
+</dependency>
+
+```
 
 ## 功能
 
