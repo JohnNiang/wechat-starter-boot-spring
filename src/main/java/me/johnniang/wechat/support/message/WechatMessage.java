@@ -4,14 +4,22 @@ package me.johnniang.wechat.support.message;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import me.johnniang.wechat.support.message.type.EventType;
 import me.johnniang.wechat.support.message.type.MessageType;
+import org.springframework.lang.NonNull;
+import org.springframework.util.Assert;
 
 /**
  * Wechat message. (Xml format)
  *
  * @author johnniang
  */
+@Data
+@ToString
+@EqualsAndHashCode
 @JacksonXmlRootElement(localName = "xml")
 public class WechatMessage {
 
@@ -168,4 +176,19 @@ public class WechatMessage {
     @JacksonXmlProperty(localName = "Precision")
     @JacksonXmlCData
     private Double precision;
+
+    public WechatMessage() {
+    }
+
+    public WechatMessage(@NonNull String toUserName, @NonNull String fromUserName, @NonNull Long createTime, @NonNull MessageType msgType) {
+        Assert.hasText(toUserName, "To user name must not be blank");
+        Assert.hasText(fromUserName, "From user name must not be blank");
+        Assert.notNull(createTime, "Create time must not be null");
+        Assert.notNull(msgType, "Message type must not be null");
+
+        this.toUserName = toUserName;
+        this.fromUserName = fromUserName;
+        this.createTime = createTime;
+        this.msgType = msgType;
+    }
 }
