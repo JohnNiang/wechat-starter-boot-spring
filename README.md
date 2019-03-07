@@ -27,3 +27,7 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:{version}-SNAPSHO
 
 unkown...
 
+## 功能
+
+* 完成 **Wechat Token** 的获取（需要完善缓存）
+
