@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.johnniang.wechat.properties.WechatProperties;
 import me.johnniang.wechat.service.WechatService;
 import me.johnniang.wechat.support.token.WechatToken;
+import me.johnniang.wechat.util.WechatUtils;
 import org.springframework.util.Assert;
 
 import static me.johnniang.wechat.util.WechatUtils.request;
@@ -52,5 +53,15 @@ public class DefaultWechatServiceImpl implements WechatService {
     @Override
     public String getWechatTokenString() {
         return getWechatToken().getAccessToken();
+    }
+
+    @Override
+    public boolean checkSignature(String signature, String timestamp, String nonce) {
+        Assert.hasText(signature, "Signature must not be blank");
+        Assert.hasText(timestamp, "Timestamp must not be blank");
+        Assert.hasText(nonce, "Nonce must not be blank");
+        Assert.hasText(wechatProperties.getValidationToken(), "Wechat validation token must not be blank");
+
+        return WechatUtils.checkSignature(signature, timestamp, nonce, wechatProperties.getValidationToken());
     }
 }

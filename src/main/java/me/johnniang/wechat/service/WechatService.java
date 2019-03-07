@@ -25,4 +25,14 @@ public interface WechatService {
      */
     @NonNull
     String getWechatTokenString();
+
+    /**
+     * Checks signature.
+     *
+     * @param signature signature must not be blank
+     * @param timestamp timestamp must not be blank
+     * @param nonce     nonce must not be blank
+     * @return true if the signature is correct, or false
+     */
+    boolean checkSignature(@NonNull String signature, @NonNull String timestamp, @NonNull String nonce);
 }
