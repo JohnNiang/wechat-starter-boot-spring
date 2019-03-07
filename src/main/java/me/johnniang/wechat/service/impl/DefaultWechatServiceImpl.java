@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import me.johnniang.wechat.exception.WechatException;
 import me.johnniang.wechat.properties.WechatProperties;
 import me.johnniang.wechat.service.WechatService;
+import me.johnniang.wechat.support.WechatBaseResponse;
+import me.johnniang.wechat.support.message.kefu.KfMessage;
 import me.johnniang.wechat.support.token.WechatToken;
 import me.johnniang.wechat.support.user.WechatUser;
 import me.johnniang.wechat.util.WechatUtils;
@@ -83,6 +85,23 @@ public class DefaultWechatServiceImpl implements WechatService {
         Assert.hasText(wechatProperties.getSnsUserInfoUrl(), "Wechat get user info via sns url must not be blank");
 
         return getWechatUserBy(String.format(wechatProperties.getSnsUserInfoUrl(), oAuth2AccessToken, openid));
+    }
+
+    @Override
+    public void sendKfMessage(KfMessage message) {
+        Assert.notNull(message, "Kefu message must not be null");
+        Assert.hasText(wechatProperties.getMessageSendingUrl(), "Wechat message sending url must not be blank");
+
+        // Build message sending url
+        String messageSendingUrl = String.format(wechatProperties.getMessageSendingUrl(), getWechatToken());
+
+        // Request for it
+        WechatBaseResponse wechatResponse = request(messageSendingUrl, "post", message, WechatBaseResponse.class);
+
+        // Should responses successfully
+        shouldResponseSuccessfully(wechatResponse);
+
+        // TODO Retry sending kefu message
     }
 
     /**

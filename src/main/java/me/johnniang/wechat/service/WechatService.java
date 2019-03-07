@@ -1,5 +1,6 @@
 package me.johnniang.wechat.service;
 
+import me.johnniang.wechat.support.message.kefu.KfMessage;
 import me.johnniang.wechat.support.token.WechatToken;
 import me.johnniang.wechat.support.user.WechatUser;
 import org.springframework.lang.NonNull;
@@ -55,4 +56,11 @@ public interface WechatService {
      */
     @NonNull
     WechatUser getWechatUserViaSns(@NonNull String openid, @NonNull String oAuth2AccessToken);
+
+    /**
+     * Sends kf message to wechat user.
+     *
+     * @param message kf message content must not be null
+     */
+    void sendKfMessage(@NonNull KfMessage message);
 }

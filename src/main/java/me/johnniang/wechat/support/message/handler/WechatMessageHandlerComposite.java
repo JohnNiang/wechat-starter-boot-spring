@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Previously wechat message handlers are cached for faster lookups.
  *
  * @author johnniang
- * @date 12/17/18
  */
 @Slf4j
 public class WechatMessageHandlerComposite implements WechatMessageHandler {

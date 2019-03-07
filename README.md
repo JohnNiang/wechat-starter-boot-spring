@@ -8,9 +8,11 @@
 
 ## 引入指南
 
-> 当前仅发布在 Snapshot 仓库中，待功能完善后将会 release 到 maven center。
+* 当前仅发布在 Snapshot 仓库中，待功能完善后将会 release 到 maven center；
 
-> 且由于 release 速度太慢，暂且配置 nexus repo。
+* 且由于 release 速度太慢，暂且配置 nexus repo；
+
+* 可以不手动提供 repo url，但要保证填写的版本在 Maven Central Repository 能够找到。
 
 ### Gradle
 
@@ -22,7 +24,7 @@ repositories {
     }
 }
 
-implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.3'
+implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.4'
 ```
 
 ### Maven
@@ -39,7 +41,7 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.3'
 <dependency>
     <groupId>me.johnniang.wechat</groupId>
     <artifactId>wechat-starter-boot-spring</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 </dependency>
 
 ```
@@ -49,7 +51,7 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.3'
 - [x] 完成 **Wechat Token** 的获取（需要完善缓存）
 - [ ] 完成 **Wechat OAuth Token** 的获取
 - [x] 完成 **签名验证** 功能
-- [ ] 完成 **发送客服消息** 功能
+- [x] 完成 **发送客服消息** 功能
 - [x] 完成 **静默获取微信用户基本信息** 功能
 - [x] 完成 **通过 sns 方式获取用户基本信息** 功能
 - [ ] 完成 **创建微信二维码** 功能
@@ -58,3 +60,7 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.3'
 - [ ] 完成 **构建 JSSDK Config** 功能
 - [ ] 完成 **微信支付** 功能
 - [x] 完成 **微信消息的接收** 功能
+
+## 开发文档
+
+本项目仅提供 WechatService。
