@@ -21,8 +21,8 @@ public class WechatAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public WechatService wechatService() {
-        return new DefaultWechatServiceImpl();
+    public WechatService wechatService(WechatProperties wechatProperties) {
+        return new DefaultWechatServiceImpl(wechatProperties);
     }
 
 }

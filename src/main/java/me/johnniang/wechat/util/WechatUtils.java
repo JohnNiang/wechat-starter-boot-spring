@@ -3,6 +3,7 @@ package me.johnniang.wechat.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import me.johnniang.wechat.exception.WechatException;
+import me.johnniang.wechat.support.WechatBaseResponse;
 import me.johnniang.wechat.support.WechatConstant;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -28,6 +29,25 @@ public class WechatUtils {
     }
 
     /**
+     * Request a resource (Default object mapper is JsonUtils.DEFAULT_JSON_MAPPER)
+     *
+     * @param requestUrl   request url must not be blank
+     * @param method       http method name must not be blank
+     * @param data         request data
+     * @param responseType response type must not be null
+     * @param <D>          request data type
+     * @param <T>          response data type
+     * @return respons data or null if there is not content in response
+     */
+    @Nullable
+    public static <D, T> T request(@NonNull String requestUrl,
+                                   @NonNull String method,
+                                   @Nullable D data,
+                                   @NonNull Class<T> responseType) {
+        return HttpClientUtils.request(requestUrl, method, data, responseType, WechatConstant.WECHAT_CHARSET, JsonUtils.DEFAULT_JSON_MAPPER);
+    }
+
+    /**
      * Request a resource
      *
      * @param requestUrl   request url must not be blank
@@ -46,6 +66,38 @@ public class WechatUtils {
                                    @NonNull Class<T> responseType,
                                    @NonNull ObjectMapper objectMapper) {
         return HttpClientUtils.request(requestUrl, method, data, responseType, WechatConstant.WECHAT_CHARSET, objectMapper);
+    }
+
+
+    /**
+     * Check the response is successful or not.
+     *
+     * @param baseResponse base response data must not be null
+     * @return true if response successfully and false otherwise
+     */
+    public static boolean isResponseSuccessfully(@NonNull WechatBaseResponse baseResponse) {
+        Assert.notNull(baseResponse, "Base response must not be null");
+
+        if (baseResponse.getErrcode() == WechatBaseResponse.SUCCESS) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Should response successfully.
+     *
+     * @param baseResponse wechat base response
+     * @throws WechatException throws when contain error in wechat response
+     */
+    public static void shouldResponseSuccessfully(@NonNull WechatBaseResponse baseResponse) {
+        Assert.notNull(baseResponse, "Base response must not be null");
+
+        if (baseResponse.getErrcode() != WechatBaseResponse.SUCCESS) {
+            log.error("Wechat response error: [{}]", baseResponse.printErrorDetail());
+            throw new WechatException("Wechat response error").setData(baseResponse);
+        }
     }
 
     /**
