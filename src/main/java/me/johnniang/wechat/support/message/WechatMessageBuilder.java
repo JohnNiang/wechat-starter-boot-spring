@@ -28,4 +28,6 @@ public class WechatMessageBuilder {
         textMessage.setContent(content);
         return textMessage;
     }
+
+    // TODO Complete another builders
 }
