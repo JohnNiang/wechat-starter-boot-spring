@@ -2,16 +2,16 @@ package me.johnniang.wechat.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import me.johnniang.wechat.exception.WechatException;
 import me.johnniang.wechat.support.WechatConstant;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.SortedMap;
+import java.util.*;
 
 /**
  * Utilities of wechat.
@@ -57,6 +57,16 @@ public class WechatUtils {
         return System.currentTimeMillis() / 1000;
     }
 
+    /**
+     * Random a string specified length
+     *
+     * @param length random string length must not be less than 0
+     * @return random string (Alpha and numeric)
+     */
+    public static String getRandomString(int length) {
+        return RandomStringUtils.randomAlphanumeric(length);
+    }
+
 
     /**
      * Checks signature.
@@ -96,10 +106,11 @@ public class WechatUtils {
     /**
      * Gets sha1 signature.
      *
-     * @param sortedMap to be signed sorted map must not be null
-     * @param ignoreKeys  ignore keys
+     * @param sortedMap  to be signed sorted map must not be null
+     * @param ignoreKeys ignore keys
      * @return sha1 signature
      */
+    @NonNull
     public static String getSha1Sign(SortedMap<String, Object> sortedMap, String... ignoreKeys) {
         Assert.notNull(sortedMap, "To be signed map must not be null");
         // Convert ignore keys to list
@@ -127,5 +138,88 @@ public class WechatUtils {
         log.debug("Signature of sha1: [{}]", signature);
 
         return signature;
+    }
+
+    /**
+     * Gets MD5 signature with key.
+     *
+     * @param map sorted map must not be empty
+     * @param key wechat secret key for signing
+     * @return md5 signature (Lower case)
+     */
+    @NonNull
+    public static String getMD5SignWithKey(SortedMap<?, ?> map, @NonNull String key) {
+        List<String> ignoreKeys = Arrays.asList("sign", "key");
+
+        return getMD5SignWithKey(map, key, ignoreKeys);
+    }
+
+    /**
+     * Gets MD5 signature with key.
+     *
+     * @param map        map must not be empty
+     * @param key        wechat secret key for signing
+     * @param ignoreKeys key list which should be ignored
+     * @return md5 signature (Lower case)
+     */
+    @NonNull
+    public static String getMD5SignWithKey(@NonNull Map<?, ?> map, @NonNull String key, @Nullable List<?> ignoreKeys) {
+        Assert.notEmpty(map, "Map to calculate must not be empty");
+        Assert.hasText(key, "Key to calculate must not be blank");
+
+        StringBuffer stringBuffer = new StringBuffer();
+
+        map.forEach((mapKey, mapValue) -> {
+            if (null != mapValue &&
+                    (ignoreKeys == null || !ignoreKeys.contains(mapKey))) {
+                // Append map key and map value
+                stringBuffer.append(mapKey).append('=').append(mapValue).append('&');
+            }
+        });
+
+        // Append key
+        stringBuffer.append("key=").append(key);
+
+        log.debug("Signing string: [{}]", stringBuffer.toString());
+
+        // Sign that string
+        String result = DigestUtils.md5Hex(stringBuffer.toString());
+
+        log.debug("Signed result: [{}] for string: [{}]", result, stringBuffer.toString());
+
+        return result;
+    }
+
+    /**
+     * Gets MD5 signature with key.
+     *
+     * @param data data to sign
+     * @param key  wechat secret key for signing
+     * @return md5 signature (Lower case)
+     */
+    @NonNull
+    public static String getMD5SignWithKey(@NonNull Object data, @NonNull String key, @NonNull ObjectMapper objectMapper) {
+        // Convert data to sorted map
+        SortedMap<?, ?> sortedMap = convertToSortedMap(data, objectMapper);
+
+        return getMD5SignWithKey(sortedMap, key);
+    }
+
+    /**
+     * Converts object data to sorted map.
+     *
+     * @param data         data to convert must not be null
+     * @param objectMapper object maper must not be null
+     * @return sorted map converting from object data
+     */
+    @NonNull
+    private static SortedMap<?, ?> convertToSortedMap(@NonNull Object data, @NonNull ObjectMapper objectMapper) {
+        // Convert data to sorted map
+        try {
+            String dataJson = JsonUtils.objectToJson(data, objectMapper);
+            return JsonUtils.jsonToObject(dataJson, TreeMap.class);
+        } catch (java.io.IOException e) {
+            throw new WechatException("Object to map processing error", e).setData(data);
+        }
     }
 }

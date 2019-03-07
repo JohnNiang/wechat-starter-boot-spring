@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -63,4 +63,19 @@ public class WechatUtilsTest {
 
         Assert.assertEquals("0f9de62fce790f9a083d5c99e95740ceb90c27ed", signature);
     }
+
+    @Test
+    public void getSignBySortedMapTest() {
+        SortedMap<String, Object> sortedMap = new TreeMap<>();
+        sortedMap.put("test_key", "test_value");
+        sortedMap.put("test_key2", "test_value2");
+        sortedMap.put("sign", "test_sign");
+        sortedMap.put("key", "key_in_sorted_map");
+
+        String signResult = WechatUtils.getMD5SignWithKey(sortedMap, "get_sign_key");
+
+        System.out.println("Sign result: " + signResult.toUpperCase());
+        assertThat(signResult, equalToIgnoringCase("EECF53EEF0BBF7FFE888BCE380FAD674"));
+    }
+
 }
