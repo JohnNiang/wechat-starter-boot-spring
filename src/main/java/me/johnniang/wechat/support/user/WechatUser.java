@@ -7,7 +7,7 @@ import lombok.ToString;
 import me.johnniang.wechat.support.WechatBaseResponse;
 
 /**
- * Wechat user.
+ * Wechat user. (Json format)
  *
  * @author johnniang
  */
