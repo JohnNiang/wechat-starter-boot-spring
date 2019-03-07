@@ -14,7 +14,7 @@ apply plugin: 'signing'
 group = 'me.johnniang.wechat'
 archivesBaseName = 'wechat-starter-boot-spring'
 // version = '0.0.2-SNAPSHOT'
-version = '0.0.3'
+version = '0.0.4'
 sourceCompatibility = '1.8'
 
 
