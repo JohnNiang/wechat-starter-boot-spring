@@ -16,6 +16,8 @@
 
 ### Gradle
 
+#### Snapshot
+
 ```groovy
 repositories {
     ...
@@ -24,10 +26,18 @@ repositories {
     }
 }
 
+implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.6-SNAPSHOT'
+```
+
+#### Release
+
+```groovy
 implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.4'
 ```
 
 ### Maven
+
+#### Snapshot
 
 ```xml
 <repositories>
@@ -38,6 +48,17 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.4'
     </repository>
 </repositories>
 
+<dependency>
+    <groupId>me.johnniang.wechat</groupId>
+    <artifactId>wechat-starter-boot-spring</artifactId>
+    <version>0.0.6-SNAPSHOT</version>
+</dependency>
+```
+
+
+#### Release
+
+```xml
 <dependency>
     <groupId>me.johnniang.wechat</groupId>
     <artifactId>wechat-starter-boot-spring</artifactId>

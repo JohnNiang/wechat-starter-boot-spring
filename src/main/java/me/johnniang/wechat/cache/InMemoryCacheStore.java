@@ -25,6 +25,7 @@ public class InMemoryCacheStore extends WechatCacheStore {
 
     @Override
     public void delete(String key) {
+        // TODO Consider to delete the cache timely
         cacheContainer.remove(key);
     }
 }
