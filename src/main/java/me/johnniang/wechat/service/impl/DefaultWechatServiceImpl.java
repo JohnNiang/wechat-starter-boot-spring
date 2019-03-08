@@ -1,7 +1,6 @@
 package me.johnniang.wechat.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import me.johnniang.wechat.cache.CacheStore;
 import me.johnniang.wechat.cache.WechatCacheStore;
 import me.johnniang.wechat.exception.WechatException;
 import me.johnniang.wechat.properties.WechatProperties;
@@ -15,6 +14,9 @@ import me.johnniang.wechat.util.WechatUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
+import java.util.concurrent.TimeUnit;
+
+import static me.johnniang.wechat.support.WechatConstant.EXPIRED_SECOND_GAP;
 import static me.johnniang.wechat.util.WechatUtils.request;
 import static me.johnniang.wechat.util.WechatUtils.shouldResponseSuccessfully;
 
@@ -42,25 +44,28 @@ public class DefaultWechatServiceImpl implements WechatService {
         Assert.hasText(wechatProperties.getAppId(), "Wechat app id must not be blank");
         Assert.hasText(wechatProperties.getAppSecret(), "Wechat app secret must not be blank");
 
-        // TODO Get wechat token from cache
-//        cacheStore.getForWechat(WechatConstant.WECHAT_TOKEN_KEY_PREFIX + wechatProperties.getAppId());
+        String tokenKey = WechatConstant.WECHAT_TOKEN_KEY_PREFIX + wechatProperties.getAppId();
 
-        // Build access token url
-        String accessTokenUrl = String.format(wechatProperties.getAccessTokenUrl(),
-                "client_credential",
-                wechatProperties.getAppId(),
-                wechatProperties.getAppSecret());
-        // Get wechat token
-        WechatToken wechatToken = request(accessTokenUrl, "get", null, WechatToken.class);
+        // Get wechat token from cache
+        return cacheStore.getForWechat(tokenKey, WechatToken.class).orElseGet(() -> {
+            // Build access token url
+            String accessTokenUrl = String.format(wechatProperties.getAccessTokenUrl(),
+                    "client_credential",
+                    wechatProperties.getAppId(),
+                    wechatProperties.getAppSecret());
+            // Get wechat token
+            WechatToken wechatToken = request(accessTokenUrl, "get", null, WechatToken.class);
 
-        // Check response
-        shouldResponseSuccessfully(wechatToken);
+            // Check response
+            shouldResponseSuccessfully(wechatToken);
 
-        // TODO Create a cache
+            // Create a cache
+            cacheStore.putForWechat(tokenKey, wechatToken, wechatToken.getExpiresIn() - EXPIRED_SECOND_GAP, TimeUnit.SECONDS);
 
-        log.debug("Wechat token: [{}]", wechatToken);
+            log.debug("Wechat token: [{}]", wechatToken);
 
-        return wechatToken;
+            return wechatToken;
+        });
     }
 
     @Override

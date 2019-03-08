@@ -30,4 +30,9 @@ public class WechatConstant {
      */
     public final static String WECHAT_TOKEN_KEY_PREFIX = "wechat_token_";
 
+    /**
+     * Expired second gap.
+     */
+    public final static int EXPIRED_SECOND_GAP = 10;
+
 }
