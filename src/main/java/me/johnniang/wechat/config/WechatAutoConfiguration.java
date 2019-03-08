@@ -1,5 +1,7 @@
 package me.johnniang.wechat.config;
 
+import me.johnniang.wechat.cache.InMemoryCacheStore;
+import me.johnniang.wechat.cache.WechatCacheStore;
 import me.johnniang.wechat.properties.WechatProperties;
 import me.johnniang.wechat.service.WechatService;
 import me.johnniang.wechat.service.impl.DefaultWechatServiceImpl;
@@ -26,8 +28,15 @@ public class WechatAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public WechatService wechatService(WechatProperties wechatProperties) {
-        return new DefaultWechatServiceImpl(wechatProperties);
+    public WechatCacheStore cacheStore() {
+        return new InMemoryCacheStore();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public WechatService wechatService(WechatProperties wechatProperties,
+                                       WechatCacheStore cacheStore) {
+        return new DefaultWechatServiceImpl(wechatProperties, cacheStore);
     }
 
     @Bean

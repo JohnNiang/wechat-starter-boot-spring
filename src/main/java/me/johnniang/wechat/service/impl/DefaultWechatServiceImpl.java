@@ -1,10 +1,13 @@
 package me.johnniang.wechat.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import me.johnniang.wechat.cache.CacheStore;
+import me.johnniang.wechat.cache.WechatCacheStore;
 import me.johnniang.wechat.exception.WechatException;
 import me.johnniang.wechat.properties.WechatProperties;
 import me.johnniang.wechat.service.WechatService;
 import me.johnniang.wechat.support.WechatBaseResponse;
+import me.johnniang.wechat.support.WechatConstant;
 import me.johnniang.wechat.support.message.kefu.KfMessage;
 import me.johnniang.wechat.support.token.WechatToken;
 import me.johnniang.wechat.support.user.WechatUser;
@@ -25,8 +28,12 @@ public class DefaultWechatServiceImpl implements WechatService {
 
     private final WechatProperties wechatProperties;
 
-    public DefaultWechatServiceImpl(WechatProperties wechatProperties) {
+    private final WechatCacheStore cacheStore;
+
+    public DefaultWechatServiceImpl(WechatProperties wechatProperties,
+                                    WechatCacheStore cacheStore) {
         this.wechatProperties = wechatProperties;
+        this.cacheStore = cacheStore;
     }
 
     @Override
@@ -36,6 +43,7 @@ public class DefaultWechatServiceImpl implements WechatService {
         Assert.hasText(wechatProperties.getAppSecret(), "Wechat app secret must not be blank");
 
         // TODO Get wechat token from cache
+//        cacheStore.getForWechat(WechatConstant.WECHAT_TOKEN_KEY_PREFIX + wechatProperties.getAppId());
 
         // Build access token url
         String accessTokenUrl = String.format(wechatProperties.getAccessTokenUrl(),
