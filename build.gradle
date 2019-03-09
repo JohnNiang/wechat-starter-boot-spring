@@ -22,9 +22,19 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    implementation {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Servlet 
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
     // Jackson lib
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
