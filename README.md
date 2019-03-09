@@ -8,12 +8,6 @@
 
 ## 引入指南
 
-* 当前仅发布在 Snapshot 仓库中，待功能完善后将会 release 到 maven center；
-
-* 且由于 release 速度太慢，暂且配置 nexus repo；
-
-* 可以不手动提供 repo url，但要保证填写的版本在 Maven Central Repository 能够找到。
-
 ### Gradle
 
 #### Snapshot
@@ -84,4 +78,125 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.4'
 
 ## 开发文档
 
-本项目仅提供 WechatService。
+### 配置微信相关参数
+
+```yaml
+johnniang:
+  wechat:
+    appId: your_app_id
+    appSecret: your_app_secret
+    validationToken: custom_validation_token for wechat validation
+    key: your_payment_key
+    mchId: your_mch_id
+    paymentNotificationUrl: payment_notification_url
+    unifiedOrderUrl: https://api.mch.weixin.qq.com/pay/unifiedorder # Default is sandbox url
+```
+
+### WechatService
+
+已经预置 WechatService，开发者可通过以下方式调用：
+
+```java
+@Autowired
+private WechatService wecahtService;
+```
+
+```java
+ /**
+* Gets wechat token.
+*
+* @return wechat token
+*/
+@NonNull
+WechatToken getWechatToken();
+
+/**
+* Gets wechat token string.
+*
+* @return wechat token string
+*/
+@NonNull
+String getWechatTokenString();
+
+/**
+* Checks signature.
+*
+* @param signature signature must not be blank
+* @param timestamp timestamp must not be blank
+* @param nonce     nonce must not be blank
+* @return true if the signature is correct, false otherwise
+*/
+boolean checkSignature(@NonNull String signature, @NonNull String timestamp, @NonNull String nonce);
+
+/**
+* Gets wechat user info.
+*
+* @param openid wechat openid must not be blank
+* @return actual wechat user info
+*/
+@NonNull
+WechatUser getWechatUser(@NonNull String openid);
+
+/**
+* Gets wechat user info via sns.
+*
+* @param openid            wechat openid must not be blank
+* @param oAuth2AccessToken oauth2 access token
+* @return actual wechat user info
+*/
+@NonNull
+WechatUser getWechatUserViaSns(@NonNull String openid, @NonNull String oAuth2AccessToken);
+
+/**
+* Sends kf message to wechat user.
+*
+* @param message kf message content must not be null
+*/
+void sendKfMessage(@NonNull KfMessage message);
+```
+
+### DefaultWechatController
+
+预置了 DefaultWechatController，开发这可通过一下方式使用（当然不是必须的）：
+
+```java
+
+@Controller
+@RequestMapping("/api/wechat")
+public class WechatController extends DefaultWechatController {
+
+    // 用户可以根据自己的需求进行重构，或者增添相应的方法。
+
+}
+```
+
+DefaultWechatController 默认的行为有：
+
+```java
+/**
+* Validate signature from wechat.
+*
+* @param signature signature from wechat
+* @param timestamp timestamp from wechat
+* @param nonce     nonce from wechat
+* @param echoStr   echoStr from wechat
+* @return echoStr from wechat
+*/
+@GetMapping
+public String validate(@RequestParam("signature") String signature,
+                    @RequestParam("timestamp") String timestamp,
+                    @RequestParam("nonce") String nonce,
+                    @RequestParam("echostr") String echoStr)
+```
+
+```java
+/**
+* Handle wechat message.
+*
+* @param request http servlet request (Auto inject)
+* @return passive wechat message
+* @throws IOException throws when HttpServletRequest#getInputStream() invokes error
+*/
+@PostMapping(produces = MediaType.APPLICATION_XML_VALUE)
+public WechatMessage handleWechatMessage(HttpServletRequest request)
+```
