@@ -26,7 +26,7 @@ repositories {
     }
 }
 
-implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.6-SNAPSHOT'
+implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.7-SNAPSHOT'
 ```
 
 #### Release
@@ -51,7 +51,7 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.4'
 <dependency>
     <groupId>me.johnniang.wechat</groupId>
     <artifactId>wechat-starter-boot-spring</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.0.7-SNAPSHOT</version>
 </dependency>
 ```
 
