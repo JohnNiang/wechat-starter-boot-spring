@@ -1,10 +1,12 @@
 # Spring Boot Starter for Wechat
 
-> 当前项目处于开发期，暂无任何实际的可用功能，感兴趣的朋友可以先关注一下！
+> 当前项目处于开发期，感兴趣的朋友可以先关注一下！
 
 ## 目的
 
-**简化微信对接流程，避免重复性工作和填坑。**
+主要为了**简化微信对接流程，避免重复性工作和填坑。**
+
+非常希望**感兴趣的朋友们**能够参与进来，完善 **Wechat Starter**。
 
 ## 引入指南
 
@@ -49,7 +51,6 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.4'
 </dependency>
 ```
 
-
 #### Release
 
 ```xml
@@ -64,7 +65,7 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.4'
 ## 功能
 
 - [x] 完成 **Wechat Token** 的获取（需要完善缓存）
-- [ ] 完成 **Wechat OAuth Token** 的获取
+- [x] 完成 **Wechat OAuth Token** 的获取
 - [x] 完成 **签名验证** 功能
 - [x] 完成 **发送客服消息** 功能
 - [x] 完成 **静默获取微信用户基本信息** 功能
@@ -83,9 +84,12 @@ implementation 'me.johnniang.wechat:wechat-starter-boot-spring:0.0.4'
 ```yaml
 johnniang:
   wechat:
+    # 基础配置信息
     appId: your_app_id
     appSecret: your_app_secret
     validationToken: custom_validation_token for wechat validation
+
+    # 支付相关信息
     key: your_payment_key
     mchId: your_mch_id
     paymentNotificationUrl: payment_notification_url
