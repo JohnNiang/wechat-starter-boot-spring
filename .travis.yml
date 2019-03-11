@@ -8,9 +8,9 @@ cache:
 jobs:
   include:
     - stage: build
-      script: gradle build -x test
+      script: ./gradlew build -x test
     - stage: test
-      script: gradle test
+      script: ./gradlew test
 stages:
   - build
   - test
