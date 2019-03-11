@@ -1,5 +1,9 @@
 # Spring Boot Starter for Wechat
 
+[![Build Status](https://travis-ci.org/JohnNiang/wechat-starter-boot-spring.svg?branch=master)](https://travis-ci.org/JohnNiang/wechat-starter-boot-spring)
+
+![JDK version](https://img.shields.io/badge/java-1.8-green.svg)
+
 > 当前项目处于开发期，感兴趣的朋友可以先关注一下！
 
 ## 目的
