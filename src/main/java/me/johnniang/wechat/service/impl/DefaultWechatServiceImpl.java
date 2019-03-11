@@ -8,6 +8,7 @@ import me.johnniang.wechat.service.WechatService;
 import me.johnniang.wechat.support.WechatBaseResponse;
 import me.johnniang.wechat.support.WechatConstant;
 import me.johnniang.wechat.support.message.kefu.KfMessage;
+import me.johnniang.wechat.support.token.WechatOAuth2Token;
 import me.johnniang.wechat.support.token.WechatToken;
 import me.johnniang.wechat.support.user.WechatUser;
 import me.johnniang.wechat.util.WechatUtils;
@@ -57,7 +58,7 @@ public class DefaultWechatServiceImpl implements WechatService {
             WechatToken wechatToken = request(accessTokenUrl, "get", null, WechatToken.class);
 
             // Check response
-            shouldResponseSuccessfully(wechatToken);
+            shouldResponseSuccessfully(wechatToken, "Failed to get wechat token");
 
             // Create a cache
             cacheStore.putForWechat(tokenKey, wechatToken, wechatToken.getExpiresIn() - EXPIRED_SECOND_GAP, TimeUnit.SECONDS);
@@ -71,6 +72,23 @@ public class DefaultWechatServiceImpl implements WechatService {
     @Override
     public String getWechatTokenString() {
         return getWechatToken().getAccessToken();
+    }
+
+    @Override
+    public WechatOAuth2Token getWechatOAuth2Token(String code) {
+        Assert.notNull(code, "Authorization code must not be blank");
+        Assert.hasText(wechatProperties.getOAuth2AccessTokenUrl(), "Wechat OAuth2 access token url must not be blank");
+
+        // Build request url
+        String requestUrl = String.format(wechatProperties.getOAuth2AccessTokenUrl(), wechatProperties.getAppId(), wechatProperties.getAppSecret(), code, "authorization_code");
+
+        // Request it
+        WechatOAuth2Token wechatOAuth2Token = request(requestUrl, "get", null, WechatOAuth2Token.class);
+
+        // Check response
+        shouldResponseSuccessfully(wechatOAuth2Token, "Failed to get wechat OAuth2 access token");
+
+        return wechatOAuth2Token;
     }
 
     @Override
@@ -112,9 +130,9 @@ public class DefaultWechatServiceImpl implements WechatService {
         WechatBaseResponse wechatResponse = request(messageSendingUrl, "post", message, WechatBaseResponse.class);
 
         // Should responses successfully
-        shouldResponseSuccessfully(wechatResponse);
+        shouldResponseSuccessfully(wechatResponse, "Failed to send kf message");
 
-        // TODO Retry sending kefu message
+        // TODO Retry to send kefu message
     }
 
     /**

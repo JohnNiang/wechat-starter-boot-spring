@@ -152,7 +152,7 @@ WechatUser getWechatUserViaSns(@NonNull String openid, @NonNull String oAuth2Acc
 *
 * @param message kf message content must not be null
 */
-void sendKfMessage(@NonNull KfMessage message);
+void sendKfMessage(@NonNull KfMessage message);gou
 ```
 
 ### DefaultWechatController

@@ -78,11 +78,8 @@ public class WechatUtils {
     public static boolean isResponseSuccessfully(@NonNull WechatBaseResponse baseResponse) {
         Assert.notNull(baseResponse, "Base response must not be null");
 
-        if (baseResponse.getErrcode() == WechatBaseResponse.SUCCESS) {
-            return true;
-        }
+        return baseResponse.getErrcode() == WechatBaseResponse.SUCCESS;
 
-        return false;
     }
 
     /**
@@ -91,12 +88,29 @@ public class WechatUtils {
      * @param baseResponse wechat base response
      * @throws WechatException throws when contain error in wechat response
      */
+    @Deprecated
     public static void shouldResponseSuccessfully(@NonNull WechatBaseResponse baseResponse) {
         Assert.notNull(baseResponse, "Base response must not be null");
 
         if (baseResponse.getErrcode() != WechatBaseResponse.SUCCESS) {
             log.error("Wechat response error: [{}]", baseResponse.printErrorDetail());
             throw new WechatException("Wechat response error").setData(baseResponse);
+        }
+    }
+
+    /**
+     * Should response successfully.
+     *
+     * @param baseResponse wechat base response
+     * @throws WechatException throws when contain error in wechat response
+     */
+    public static void shouldResponseSuccessfully(@NonNull WechatBaseResponse baseResponse, @NonNull String message) {
+        Assert.notNull(baseResponse, "Base response must not be null");
+        Assert.hasText(message, "Error message must not be blank");
+
+        if (baseResponse.getErrcode() != WechatBaseResponse.SUCCESS) {
+            log.error("Wechat response error: [{}]", baseResponse.printErrorDetail());
+            throw new WechatException(message).setData(baseResponse);
         }
     }
 

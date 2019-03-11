@@ -1,9 +1,7 @@
 package me.johnniang.wechat.support.token;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import me.johnniang.wechat.support.WechatBaseResponse;
 
 /**
@@ -13,6 +11,8 @@ import me.johnniang.wechat.support.WechatBaseResponse;
  */
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class WechatToken extends WechatBaseResponse {
 

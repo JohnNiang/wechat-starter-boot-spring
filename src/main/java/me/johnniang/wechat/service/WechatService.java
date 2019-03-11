@@ -1,6 +1,7 @@
 package me.johnniang.wechat.service;
 
 import me.johnniang.wechat.support.message.kefu.KfMessage;
+import me.johnniang.wechat.support.token.WechatOAuth2Token;
 import me.johnniang.wechat.support.token.WechatToken;
 import me.johnniang.wechat.support.user.WechatUser;
 import org.springframework.lang.NonNull;
@@ -27,6 +28,15 @@ public interface WechatService {
      */
     @NonNull
     String getWechatTokenString();
+
+    /**
+     * Gets wechat OAuth2 token for get user info.
+     *
+     * @param code authorized code
+     * @return wechat OAuth2 token
+     */
+    @NonNull
+    WechatOAuth2Token getWechatOAuth2Token(@NonNull String code);
 
     /**
      * Checks signature.
