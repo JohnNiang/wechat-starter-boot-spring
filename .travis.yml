@@ -11,16 +11,19 @@ cache:
     - $HOME/.gradle/wrapper/
 before_install:
   - echo "ossrhUsername=${ossrhUsername}" >> $HOME/.gradle/gradle.properties
-  - echo "ossrhPassword=${ossrhUsername}" >> $HOME/.gradle/gradle.properties
+  - echo "ossrhPassword=${ossrhPassword}" >> $HOME/.gradle/gradle.properties
 jobs:
   include:
+    - stage: test
+      script: ./gradlew check
     - stage: build
       script: ./gradlew build -x test
-    - stage: test
-      script: ./gradlew test
+    - stage: publish
+      script: ./gradlew publish
 stages:
-  - build
   - test
+  - build
+  - publish
 branches:
   only:
     - master
