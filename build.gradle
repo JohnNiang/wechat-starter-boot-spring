@@ -18,7 +18,11 @@ sourceCompatibility = "1.8"
 
 
 repositories {
+    maven {
+        url "https://maven.aliyun.com/nexus/content/groups/public"
+    }
     mavenCentral()
+    jcenter()
 }
 
 configurations {
@@ -55,7 +59,9 @@ dependencies {
     implementation "org.apache.commons:commons-lang3:$commonsLang3Version"
     implementation "commons-io:commons-io:$commonsIOVersion"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+    }
 
     annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor"
 }

@@ -17,16 +17,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.assertj.core.util.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * Http client utilities test.
@@ -49,7 +47,7 @@ public class HttpClientUtilsTest {
         log.debug("GetSchemeSpecificPart: [{}]", uri.getSchemeSpecificPart());
         log.debug("GetRawSchemeSpecificPart: [{}]", uri.getRawSchemeSpecificPart());
 
-        assertThat(uri.getScheme(), equalTo("http"));
+        Assertions.assertEquals("http", uri.getScheme());
     }
 
     @Test
@@ -59,12 +57,12 @@ public class HttpClientUtilsTest {
 
         log.debug("Params result: [{}]", params);
 
-        assertThat(params.size(), equalTo(2));
-        assertThat(params.get(0).getName(), equalTo("a"));
-        assertThat(params.get(0).getValue(), equalTo("test"));
+        Assertions.assertEquals(2, params.size());
+        Assertions.assertEquals("a", params.get(0).getName());
+        Assertions.assertEquals("test", params.get(0).getValue());
 
-        assertThat(params.get(1).getName(), equalTo("b"));
-        assertThat(params.get(1).getValue(), equalTo("10"));
+        Assertions.assertEquals("b", params.get(1).getName());
+        Assertions.assertEquals("10", params.get(1).getValue());
     }
 
     @Test
@@ -78,7 +76,7 @@ public class HttpClientUtilsTest {
         HttpClient client = HttpClients.createDefault();
         HttpResponse response = client.execute(new HttpGet("http://www.bing.com"));
         StatusLine statusLine = response.getStatusLine();
-        assertThat(statusLine.getStatusCode(), equalTo(HttpStatus.SC_OK));
+        Assertions.assertEquals(HttpStatus.SC_OK, statusLine.getStatusCode());
     }
 
     @Test
@@ -102,16 +100,16 @@ public class HttpClientUtilsTest {
         CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build();
         CloseableHttpResponse response = client.execute(new HttpGet("http://bing.com"));
 
-        assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_MOVED_PERMANENTLY));
+        Assertions.assertEquals(HttpStatus.SC_MOVED_PERMANENTLY, response.getStatusLine().getStatusCode());
     }
 
     @Test
     public void setHeaderTest() throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpUriRequest request = RequestBuilder.get()
-                .setUri("http://bing.com")
-                .setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())
-                .build();
+            .setUri("http://bing.com")
+            .setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())
+            .build();
         client.execute(request);
     }
 
@@ -122,8 +120,8 @@ public class HttpClientUtilsTest {
         ArrayList<Header> headers = Lists.newArrayList(header);
 
         CloseableHttpClient client = HttpClients.custom()
-                .setDefaultHeaders(headers)
-                .build();
+            .setDefaultHeaders(headers)
+            .build();
         HttpUriRequest request = RequestBuilder.get("http://bing.com").build();
         client.execute(request);
     }

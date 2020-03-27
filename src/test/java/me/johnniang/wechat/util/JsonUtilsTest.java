@@ -2,13 +2,11 @@ package me.johnniang.wechat.util;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * JsonUtils test.
@@ -25,13 +23,12 @@ public class JsonUtilsTest {
 
         Integer number = JsonUtils.jsonToObject(json, Integer.class);
 
-        assertThat(number, equalTo(100));
+        Assertions.assertEquals(100, number);
     }
 
-    @Test(expected = MismatchedInputException.class)
-    public void jsonToByteArrayTest() throws IOException {
+    @Test
+    public void jsonToByteArrayTest() {
         String json = "234123512";
-
-        byte[] bytes = JsonUtils.jsonToObject(json, byte[].class);
+        Assertions.assertThrows(MismatchedInputException.class, () -> JsonUtils.jsonToObject(json, byte[].class));
     }
 }

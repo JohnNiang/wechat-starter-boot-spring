@@ -1,24 +1,22 @@
 package me.johnniang.wechat.cache;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
 
 /**
  * Wechat cache store test.
  *
  * @author johnniang
  */
-public class WechatCacheStoreTest {
+class WechatCacheStoreTest {
 
     private WechatCacheStore cacheStore;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         cacheStore = new InMemoryCacheStore();
     }
@@ -30,8 +28,8 @@ public class WechatCacheStoreTest {
 
         Optional<String> value = cacheStore.getForWechat(key, String.class);
 
-        assertTrue(value.isPresent());
-        assertThat(value.get(), equalTo("test_value"));
+        Assertions.assertTrue(value.isPresent());
+        Assertions.assertEquals("test_value", value.get());
     }
 
     @Test
@@ -42,13 +40,13 @@ public class WechatCacheStoreTest {
 
         Optional<String> value = cacheStore.getForWechat(key, String.class);
 
-        assertTrue(value.isPresent());
-        assertThat(value.get(), equalTo("test_value"));
+        Assertions.assertTrue(value.isPresent());
+        Assertions.assertEquals("test_value", value.get());
 
         cacheStore.delete(key);
 
         value = cacheStore.getForWechat(key, String.class);
-        assertFalse(value.isPresent());
+        Assertions.assertFalse(value.isPresent());
     }
 
     @Test
@@ -58,11 +56,9 @@ public class WechatCacheStoreTest {
         cacheStore.putForWechat(key, "test_value", 1, TimeUnit.SECONDS);
 
         TimeUnit.MILLISECONDS.sleep(1010);
-
         Optional<String> value = cacheStore.getForWechat(key, String.class);
 
-
-        assertTrue(!value.isPresent());
+        Assertions.assertFalse(value.isPresent());
     }
 
 }
