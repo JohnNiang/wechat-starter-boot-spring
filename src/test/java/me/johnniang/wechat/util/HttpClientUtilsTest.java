@@ -17,16 +17,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.assertj.core.util.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * Http client utilities test.
@@ -35,10 +33,10 @@ import static org.junit.Assert.assertThat;
  */
 @Slf4j
 @ActiveProfiles("test")
-public class HttpClientUtilsTest {
+class HttpClientUtilsTest {
 
     @Test
-    public void getUrlSchemeTest() {
+    void getUrlSchemeTest() {
         String url = "http://www.bing.com";
 
         URI uri = URI.create(url);
@@ -49,40 +47,40 @@ public class HttpClientUtilsTest {
         log.debug("GetSchemeSpecificPart: [{}]", uri.getSchemeSpecificPart());
         log.debug("GetRawSchemeSpecificPart: [{}]", uri.getRawSchemeSpecificPart());
 
-        assertThat(uri.getScheme(), equalTo("http"));
+        Assertions.assertEquals("http", uri.getScheme());
     }
 
     @Test
-    public void convertToNvpParamsTest() throws IOException {
+    void convertToNvpParamsTest() throws IOException {
         TestA a = new TestA("test", 10);
         List<NameValuePair> params = HttpClientUtils.convertToNvpParams(a);
 
         log.debug("Params result: [{}]", params);
 
-        assertThat(params.size(), equalTo(2));
-        assertThat(params.get(0).getName(), equalTo("a"));
-        assertThat(params.get(0).getValue(), equalTo("test"));
+        Assertions.assertEquals(2, params.size());
+        Assertions.assertEquals("a", params.get(0).getName());
+        Assertions.assertEquals("test", params.get(0).getValue());
 
-        assertThat(params.get(1).getName(), equalTo("b"));
-        assertThat(params.get(1).getValue(), equalTo("10"));
+        Assertions.assertEquals("b", params.get(1).getName());
+        Assertions.assertEquals("10", params.get(1).getValue());
     }
 
     @Test
-    public void getViaHttpTest() throws IOException {
+    void getViaHttpTest() throws IOException {
         HttpResponse response = HttpClientUtils.requestViaHttp("http://bing.com", "get", null);
         log.debug("Response: [{}}", EntityUtils.toString(response.getEntity()));
     }
 
     @Test
-    public void doGetTest() throws IOException {
+    void doGetTest() throws IOException {
         HttpClient client = HttpClients.createDefault();
         HttpResponse response = client.execute(new HttpGet("http://www.bing.com"));
         StatusLine statusLine = response.getStatusLine();
-        assertThat(statusLine.getStatusCode(), equalTo(HttpStatus.SC_OK));
+        Assertions.assertEquals(HttpStatus.SC_OK, statusLine.getStatusCode());
     }
 
     @Test
-    public void abortRequestTest() throws IOException {
+    void abortRequestTest() throws IOException {
         HttpClient client = HttpClients.createDefault();
         HttpGet request = new HttpGet("http://www.bing.com");
         HttpResponse response = client.execute(request);
@@ -98,32 +96,32 @@ public class HttpClientUtilsTest {
     }
 
     @Test
-    public void redirectTest() throws IOException {
+    void redirectTest() throws IOException {
         CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build();
         CloseableHttpResponse response = client.execute(new HttpGet("http://bing.com"));
 
-        assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_MOVED_PERMANENTLY));
+        Assertions.assertEquals(HttpStatus.SC_MOVED_PERMANENTLY, response.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void setHeaderTest() throws IOException {
+    void setHeaderTest() throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpUriRequest request = RequestBuilder.get()
-                .setUri("http://bing.com")
-                .setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())
-                .build();
+            .setUri("http://bing.com")
+            .setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())
+            .build();
         client.execute(request);
     }
 
     @Test
-    public void setDefaultHeaderTest() throws IOException {
+    void setDefaultHeaderTest() throws IOException {
         // Set default
         Header header = new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());
         ArrayList<Header> headers = Lists.newArrayList(header);
 
         CloseableHttpClient client = HttpClients.custom()
-                .setDefaultHeaders(headers)
-                .build();
+            .setDefaultHeaders(headers)
+            .build();
         HttpUriRequest request = RequestBuilder.get("http://bing.com").build();
         client.execute(request);
     }
