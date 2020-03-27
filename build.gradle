@@ -1,20 +1,20 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
-    id 'java-library'
-    id 'maven-publish'
-    id 'signing'
+    id "org.springframework.boot" version "2.2.6.RELEASE"
+    id "java-library"
+    id "maven-publish"
+    id "signing"
     id "io.freefair.lombok" version "5.0.0-rc6"
 }
 
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'java-library'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
+apply plugin: "io.spring.dependency-management"
+apply plugin: "java-library"
+apply plugin: "maven-publish"
+apply plugin: "signing"
 
-group = 'me.johnniang.wechat'
-archivesBaseName = 'wechat-starter-boot-spring'
-version = '0.0.8-SNAPSHOT'
-sourceCompatibility = '1.8'
+group = "me.johnniang.wechat"
+archivesBaseName = "wechat-starter-boot-spring"
+version = "0.0.8-SNAPSHOT"
+sourceCompatibility = "1.8"
 
 
 repositories {
@@ -23,7 +23,7 @@ repositories {
 
 configurations {
     implementation {
-        exclude module: 'spring-boot-starter-tomcat'
+        exclude module: "spring-boot-starter-tomcat"
     }
 }
 
@@ -36,28 +36,28 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-autoconfigure'
-    implementation 'org.springframework.boot:spring-boot-starter-logging'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-web"
 
     // Servlet 
-    implementation 'javax.servlet:javax.servlet-api:$servletApiVersion'
+    implementation "javax.servlet:javax.servlet-api:$servletApiVersion"
 
     // Jackson lib
-    implementation 'com.fasterxml.jackson.core:jackson-databind:$jacksonVersion'
-    implementation 'com.fasterxml.jackson.core:jackson-core:$jacksonVersion'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion'
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion"
 
     // Apache lib
-    implementation 'org.apache.httpcomponents:httpclient:$httpComponentsVersion'
-    implementation 'org.apache.httpcomponents:httpmime:$httpComponentsVersion'
-    implementation 'org.apache.commons:commons-lang3:$commonsLang3Version'
-    implementation 'commons-io:commons-io:$commonsIOVersion'
+    implementation "org.apache.httpcomponents:httpclient:$httpComponentsVersion"
+    implementation "org.apache.httpcomponents:httpmime:$httpComponentsVersion"
+    implementation "org.apache.commons:commons-lang3:$commonsLang3Version"
+    implementation "commons-io:commons-io:$commonsIOVersion"
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 
-    annotationProcessor 'org.springframework.boot:spring-boot-autoconfigure-processor'
+    annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor"
 }
 
 jar {
@@ -66,50 +66,50 @@ jar {
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
-    archiveClassifier = 'sources'
+    archiveClassifier = "sources"
 }
 
 task javadocJar(type: Jar) {
     from javadoc
-    archiveClassifier = 'javadoc'
+    archiveClassifier = "javadoc"
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'wechat-starter-boot-spring'
+            artifactId = "wechat-starter-boot-spring"
             from components.java
             artifact sourcesJar
             artifact javadocJar
             versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
                 }
-                usage('java-runtime') {
+                usage("java-runtime") {
                     fromResolutionResult()
                 }
             }
             pom {
-                name = 'Wechat Starter Boot Spring'
-                description = 'Spring Boot Starter for Wechat'
-                url = 'https://github.com/JohnNiang/wechat-starter-boot-spring'
+                name = "Wechat Starter Boot Spring"
+                description = "Spring Boot Starter for Wechat"
+                url = "https://github.com/JohnNiang/wechat-starter-boot-spring"
                 licenses {
                     license {
-                        name = 'GNU General Public License v3.0'
-                        url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                        name = "GNU General Public License v3.0"
+                        url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
                     }
                 }
                 developers {
                     developer {
-                        id = 'johnniang'
-                        name = 'johnniang'
-                        email = 'johnniang@riseup.net'
+                        id = "johnniang"
+                        name = "johnniang"
+                        email = "johnniang@riseup.net"
                     }
                 }
                 scm {
-                    connection = 'scm:https://github.com/JohnNiang/wechat-starter-boot-spring.git'
-                    developerConnection = 'scm:https://github.com/JohnNiang/wechat-starter-boot-spring.git'
-                    url = 'https://github.com/JohnNiang/wechat-starter-boot-spring.git'
+                    connection = "scm:https://github.com/JohnNiang/wechat-starter-boot-spring.git"
+                    developerConnection = "scm:https://github.com/JohnNiang/wechat-starter-boot-spring.git"
+                    url = "https://github.com/JohnNiang/wechat-starter-boot-spring.git"
                 }
             }
         }
@@ -120,9 +120,9 @@ publishing {
                 username = System.env.ossrhUsername
                 password = System.env.ossrhPassword
             }
-            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
         }
     }
 }
@@ -132,8 +132,8 @@ signing {
 }
 
 javadoc {
-    options.tags = ['date']
+    options.tags = ["date"]
     if (JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
+        options.addBooleanOption("html5", true)
     }
 }
