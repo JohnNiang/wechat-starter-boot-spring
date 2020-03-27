@@ -10,45 +10,45 @@ import java.util.TreeMap;
 
 @Slf4j
 @ActiveProfiles("test")
-public class WechatUtilsTest {
+class WechatUtilsTest {
 
     @Test
-    public void requestAndResponseStringTest() {
+    void requestAndResponseStringTest() {
         String responseContent = WechatUtils.request("https://cn.bing.com/", "get", null, String.class, JsonUtils.DEFAULT_JSON_MAPPER);
 
         log.debug("Response content: [{}]", responseContent);
     }
 
     @Test
-    public void requestAndResponseByteArrasyTest() {
+    void requestAndResponseByteArrasyTest() {
         byte[] responseContent = WechatUtils.request("https://cn.bing.com/", "get", null, byte[].class, JsonUtils.DEFAULT_JSON_MAPPER);
 
         log.debug("Response content: [{}]", responseContent);
     }
 
     @Test
-    public void getCurrentTimestampTest() {
+    void getCurrentTimestampTest() {
         long curTimestamp = WechatUtils.getCurrentTimestamp();
 
         Assertions.assertTrue(curTimestamp >= System.currentTimeMillis() / 1000);
     }
 
     @Test
-    public void checkSignatureSuccessTest() {
+    void checkSignatureSuccessTest() {
         boolean matched = WechatUtils.checkSignature("c579d4e4f8a46938ab6373f467162d645244b2c4", "timestamp", "nonce");
 
         Assertions.assertTrue(matched);
     }
 
     @Test
-    public void checkSignatureFailureTest() {
+    void checkSignatureFailureTest() {
         boolean matched = WechatUtils.checkSignature("c579d4e4f8a46938ab6373f467162d645244b2c4", "another_timestamp", "another_nonce");
 
         Assertions.assertFalse(matched);
     }
 
     @Test
-    public void getSha1Sign() {
+    void getSha1Sign() {
         SortedMap<String, Object> toBeSignMap = new TreeMap<>();
         toBeSignMap.put("noncestr", "Wm3WZYTPz0wzccnW");
         toBeSignMap.put("jsapi_ticket", "sM4AOVdWfPE4DxkXGEs8VMCPGGVi4C3VM0P37wVUCFvkVAy_90u5h9nbSlYy3-Sl-HhTdfl2fzFy1AOcHKP7qg");
@@ -61,7 +61,7 @@ public class WechatUtilsTest {
     }
 
     @Test
-    public void getSignBySortedMapTest() {
+    void getSignBySortedMapTest() {
         SortedMap<String, Object> sortedMap = new TreeMap<>();
         sortedMap.put("test_key", "test_value");
         sortedMap.put("test_key2", "test_value2");

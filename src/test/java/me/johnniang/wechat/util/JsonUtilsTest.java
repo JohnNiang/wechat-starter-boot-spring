@@ -15,10 +15,10 @@ import java.io.IOException;
  */
 @Slf4j
 @ActiveProfiles("test")
-public class JsonUtilsTest {
+class JsonUtilsTest {
 
     @Test
-    public void jsonToIntegerTest() throws IOException {
+    void jsonToIntegerTest() throws IOException {
         String json = "100";
 
         Integer number = JsonUtils.jsonToObject(json, Integer.class);
@@ -27,7 +27,7 @@ public class JsonUtilsTest {
     }
 
     @Test
-    public void jsonToByteArrayTest() {
+    void jsonToByteArrayTest() {
         String json = "234123512";
         Assertions.assertThrows(MismatchedInputException.class, () -> JsonUtils.jsonToObject(json, byte[].class));
     }

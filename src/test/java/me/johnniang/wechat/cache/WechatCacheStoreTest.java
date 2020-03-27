@@ -17,12 +17,12 @@ class WechatCacheStoreTest {
     private WechatCacheStore cacheStore;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         cacheStore = new InMemoryCacheStore();
     }
 
     @Test
-    public void putAndGetTest() {
+    void putAndGetTest() {
         String key = "test_key";
         cacheStore.putForWechat(key, "test_value", 10, TimeUnit.SECONDS);
 
@@ -33,7 +33,7 @@ class WechatCacheStoreTest {
     }
 
     @Test
-    public void deleteTest() {
+    void deleteTest() {
         String key = "test_key";
 
         cacheStore.putForWechat(key, "test_value", 10, TimeUnit.SECONDS);
@@ -50,7 +50,7 @@ class WechatCacheStoreTest {
     }
 
     @Test
-    public void expireTest() throws InterruptedException {
+    void expireTest() throws InterruptedException {
         String key = "test_key";
 
         cacheStore.putForWechat(key, "test_value", 1, TimeUnit.SECONDS);

@@ -33,10 +33,10 @@ import java.util.List;
  */
 @Slf4j
 @ActiveProfiles("test")
-public class HttpClientUtilsTest {
+class HttpClientUtilsTest {
 
     @Test
-    public void getUrlSchemeTest() {
+    void getUrlSchemeTest() {
         String url = "http://www.bing.com";
 
         URI uri = URI.create(url);
@@ -51,7 +51,7 @@ public class HttpClientUtilsTest {
     }
 
     @Test
-    public void convertToNvpParamsTest() throws IOException {
+    void convertToNvpParamsTest() throws IOException {
         TestA a = new TestA("test", 10);
         List<NameValuePair> params = HttpClientUtils.convertToNvpParams(a);
 
@@ -66,13 +66,13 @@ public class HttpClientUtilsTest {
     }
 
     @Test
-    public void getViaHttpTest() throws IOException {
+    void getViaHttpTest() throws IOException {
         HttpResponse response = HttpClientUtils.requestViaHttp("http://bing.com", "get", null);
         log.debug("Response: [{}}", EntityUtils.toString(response.getEntity()));
     }
 
     @Test
-    public void doGetTest() throws IOException {
+    void doGetTest() throws IOException {
         HttpClient client = HttpClients.createDefault();
         HttpResponse response = client.execute(new HttpGet("http://www.bing.com"));
         StatusLine statusLine = response.getStatusLine();
@@ -80,7 +80,7 @@ public class HttpClientUtilsTest {
     }
 
     @Test
-    public void abortRequestTest() throws IOException {
+    void abortRequestTest() throws IOException {
         HttpClient client = HttpClients.createDefault();
         HttpGet request = new HttpGet("http://www.bing.com");
         HttpResponse response = client.execute(request);
@@ -96,7 +96,7 @@ public class HttpClientUtilsTest {
     }
 
     @Test
-    public void redirectTest() throws IOException {
+    void redirectTest() throws IOException {
         CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build();
         CloseableHttpResponse response = client.execute(new HttpGet("http://bing.com"));
 
@@ -104,7 +104,7 @@ public class HttpClientUtilsTest {
     }
 
     @Test
-    public void setHeaderTest() throws IOException {
+    void setHeaderTest() throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpUriRequest request = RequestBuilder.get()
             .setUri("http://bing.com")
@@ -114,7 +114,7 @@ public class HttpClientUtilsTest {
     }
 
     @Test
-    public void setDefaultHeaderTest() throws IOException {
+    void setDefaultHeaderTest() throws IOException {
         // Set default
         Header header = new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());
         ArrayList<Header> headers = Lists.newArrayList(header);
